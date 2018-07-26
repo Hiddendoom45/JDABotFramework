@@ -11,12 +11,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  * @author Allen
  *
  */
-public class JDABot {
-	private HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
+public class DiscordBot {
+	private final HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
 	private final BotGlobalConfig config;
 	private ListenerAdapter main;
 	//create JDABot instance 
-	protected JDABot(BotInstance instance,BotGlobalConfig config){
+	protected DiscordBot(BotInstance instance,BotGlobalConfig config){
 		instances.put(instance.shard, instance);
 		this.config=config;
 		main = new MainBotListener(config);

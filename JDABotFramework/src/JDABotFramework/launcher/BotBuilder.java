@@ -42,17 +42,17 @@ public class BotBuilder {
 		this.shardIDs=shards;
 		return this;
 	}
-	public JDABot buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
+	public DiscordBot buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
 		JDA jda = null;
-		JDABot bot = null;
+		DiscordBot bot = null;
 		if(shards>0){
 			if(shardIDs==null){
 				jda = build(false,0);
-				bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 			}
 			else{
 				jda = build(false,shardIDs[0]);
-				bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 				for(int i = 1;i<shardIDs.length;i++){
 					bot.addInstance(new BotInstance(build(false,shardIDs[i])));
 				}
@@ -60,7 +60,7 @@ public class BotBuilder {
 		}
 		else{
 			jda = build(false,0);
-			bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+			bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 		}
 		return bot;
 	}
