@@ -1,0 +1,79 @@
+package JDABotFramework.launcher;
+
+import javax.security.auth.login.LoginException;
+
+import JDABotFramework.global.config.BotConfigStatics;
+import JDABotFramework.global.config.BotGlobalConfig;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
+
+/**
+ * Use to build a generic bot instance
+ * @author Allen
+ *
+ */
+public class BotBuilder {
+	private String token;
+	private int shards=0;
+	private int[] shardIDs=null;
+	public BotBuilder(String token){
+		this.token=token;
+	}
+	/**
+	 * Sets the total shards for the bot, if set, turns sharding on when building the Bot.
+	 * By default this builds all shards based on the value set, use {@link #setShardIds(int...)} to
+	 * specify the specific shards if bot is running across multiple devices/processes
+	 * @param shards
+	 * @return
+	 */
+	public BotBuilder setShards(int shards){
+		this.shards=shards;
+		return this;
+	}
+	/**
+	 * Use to set specifically what shards to build, use if bot is running across multiple devices/processes.
+	 * Overrides any ids set using previous calls to this method.
+	 * @param shards the Ids for the shards to build
+	 * @return
+	 */
+	public BotBuilder setShardIds(int... shards){
+		this.shardIDs=shards;
+		return this;
+	}
+	public JDABot buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
+		JDA jda = null;
+		JDABot bot = null;
+		if(shards>0){
+			if(shardIDs==null){
+				jda = build(false,0);
+				bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+			}
+			else{
+				jda = build(false,shardIDs[0]);
+				bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				for(int i = 1;i<shardIDs.length;i++){
+					bot.addInstance(new BotInstance(build(false,shardIDs[i])));
+				}
+			}
+		}
+		else{
+			jda = build(false,0);
+			bot = new JDABot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+		}
+		return bot;
+	}
+	private JDA build(boolean async,int Shardnum) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
+		JDABuilder j = new JDABuilder(AccountType.BOT).setToken(token);
+		if(shards>0){
+			j.useSharding(Shardnum, shards);
+		}
+		if(async){
+			return j.buildAsync();
+		}
+		else{
+			return j.buildBlocking();
+		}
+	}
+}
