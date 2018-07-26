@@ -2,7 +2,6 @@ package JDABotFramework.listeners;
 
 import java.util.function.Predicate;
 
-import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.util.command.CmdControl;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -18,8 +17,7 @@ public class MainBotListener extends ListenerAdapter {
 	private Predicate<ReadyEvent> ready = null;//no list, will be chained
 	private Predicate<MessageReceivedEvent> messageReceived = null;
 	
-	public MainBotListener(BotGlobalConfig config){
-		CmdControl cmd = new CmdControl(config);
+	public MainBotListener(CmdControl cmd){
 		addMessageReceived(e ->{
 			return cmd.parseCommands(e);
 		});

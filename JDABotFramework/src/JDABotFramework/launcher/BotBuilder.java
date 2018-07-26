@@ -4,9 +4,11 @@ import javax.security.auth.login.LoginException;
 
 import JDABotFramework.global.config.BotConfigStatics;
 import JDABotFramework.global.config.BotGlobalConfig;
+import JDABotFramework.launcher.DiscordBot.BotInit;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
@@ -42,17 +44,17 @@ public class BotBuilder {
 		this.shardIDs=shards;
 		return this;
 	}
-	public DiscordBot buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
+	public BotInit buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
 		JDA jda = null;
-		DiscordBot bot = null;
+		BotInit bot = null;
 		if(shards>0){
 			if(shardIDs==null){
 				jda = build(false,0);
-				bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 			}
 			else{
 				jda = build(false,shardIDs[0]);
-				bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 				for(int i = 1;i<shardIDs.length;i++){
 					bot.addInstance(new BotInstance(build(false,shardIDs[i])));
 				}
@@ -60,12 +62,12 @@ public class BotBuilder {
 		}
 		else{
 			jda = build(false,0);
-			bot = new DiscordBot(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+			bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 		}
 		return bot;
 	}
 	private JDA build(boolean async,int Shardnum) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
-		JDABuilder j = new JDABuilder(AccountType.BOT).setToken(token);
+		JDABuilder j = new JDABuilder(AccountType.BOT).setToken(token).setAutoReconnect(true).setStatus(OnlineStatus.DO_NOT_DISTURB);
 		if(shards>0){
 			j.useSharding(Shardnum, shards);
 		}
