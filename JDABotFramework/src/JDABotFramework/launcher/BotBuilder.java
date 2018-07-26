@@ -44,24 +44,33 @@ public class BotBuilder {
 		this.shardIDs=shards;
 		return this;
 	}
+	public BotInit buildAysnc() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
+		return buildMain(true);
+	}
 	public BotInit buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
+		return buildMain(false);
+	}
+	private BotInit buildMain(boolean async) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
 		JDA jda = null;
 		BotInit bot = null;
 		if(shards>0){
 			if(shardIDs==null){
-				jda = build(false,0);
+				jda = build(async,0);
 				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
+				for(int i =1;i<shards;i++){
+					bot.addInstance(new BotInstance(build(async,i)));
+				}
 			}
 			else{
-				jda = build(false,shardIDs[0]);
+				jda = build(async,shardIDs[0]);
 				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 				for(int i = 1;i<shardIDs.length;i++){
-					bot.addInstance(new BotInstance(build(false,shardIDs[i])));
+					bot.addInstance(new BotInstance(build(async,shardIDs[i])));
 				}
 			}
 		}
 		else{
-			jda = build(false,0);
+			jda = build(async,0);
 			bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
 		}
 		return bot;

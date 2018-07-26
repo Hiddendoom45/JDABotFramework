@@ -38,6 +38,8 @@ public abstract class DiscordBot {
 	
 	private void startup(){
 		setup();
+		// change from default do not disturb setting in 
+		setActivity(OnlineStatus.ONLINE);
 	}
 	
 	protected abstract void setup();
