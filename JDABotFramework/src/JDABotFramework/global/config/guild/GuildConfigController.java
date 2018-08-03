@@ -34,7 +34,12 @@ public class GuildConfigController {
 		store.pull();
 		String[] index = new Gson().fromJson(store.getString("guildIndex"), String[].class);
 		for(String g:index){
-			guilds.put(g, new Gson().fromJson(store.getString(g), GuildConfig.class));
+			GuildConfig gc = new Gson().fromJson(store.getString(g), GuildConfig.class);
+			//hook to push update to source once anything there gets updated
+			gc.setUpdateHook(()->{
+				update(gc.id);
+			});
+			guilds.put(g, gc);
 		}
 	}
 	public void update(String id){
@@ -77,6 +82,9 @@ public class GuildConfigController {
 			//set in this manner so if default changes later any existing guilds won't have their prefixes changed
 			g.setPrefix(gConfig.getDefaultPrefix());
 			g.setModPrefix(gConfig.getDefaultModPrefix());
+			g.setUpdateHook(()->{
+				update(g.id);
+			});
 			guilds.put("G:"+id, g);
 			return g;
 		}
