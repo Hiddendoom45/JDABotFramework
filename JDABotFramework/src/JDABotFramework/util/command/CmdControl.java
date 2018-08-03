@@ -18,7 +18,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  */
 public class CmdControl {
 	private final ArrayList<Permission> modPermissions = new ArrayList<Permission>();//generic permisisons that probably indicate mod
-	public final CommandParser parser=new CommandParser(null,null);//parse most commands
+	public final CommandParser parser;//parse most commands
 	//maps for commands
 	private HashMap<String,Command> commands=new HashMap<String,Command>();
 	private HashMap<String,Command> modCommands=new HashMap<String,Command>();
@@ -26,6 +26,7 @@ public class CmdControl {
 	private BotGlobalConfig config;
 	public CmdControl(BotGlobalConfig config){
 		this.config = config;
+		parser = new CommandParser(config);
 	}
 	public boolean parseCommands(MessageReceivedEvent event){
 		if(event.getAuthor().getId().equals(config.getSelfID()))return false;//avoid responding to self

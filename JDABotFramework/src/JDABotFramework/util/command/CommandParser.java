@@ -1,22 +1,20 @@
 package JDABotFramework.util.command;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
+import JDABotFramework.global.config.BotGlobalConfig;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandParser {
-	private Supplier<String> prefix;
-	private Supplier<String> modPrefix;
-	public CommandParser(Supplier<String> prefix, Supplier<String> modPrefix){
-		this.prefix=prefix;
-		this.modPrefix=modPrefix;
+	private final BotGlobalConfig config;
+	public CommandParser(BotGlobalConfig config){
+		this.config=config;
 	}
 	public CommandContainer parse(String rw,MessageReceivedEvent e){
 		ArrayList<String> split=new ArrayList<String>();
 		String raw= rw;
-		String modPrefix = this.modPrefix.get();
-		String prefix =this.prefix.get();
+		String modPrefix = config.getModPrefix(e.getGuild());
+		String prefix = config.getPrefix(e.getGuild());
 		boolean isModCmd=raw.startsWith(modPrefix);
 		String beheaded;
 		if(isModCmd){
