@@ -1,12 +1,10 @@
 package JDABotFramework.global.config.guild;
 
 import java.util.Vector;
-
-import com.google.gson.Gson;
-
 /**
  * used to control whether a module is enabled or disabled per guild
  * @author Allen
+ * 
  *
  */
 public class ModuleController {
@@ -44,7 +42,14 @@ public class ModuleController {
 	public boolean enabledGlobal(){
 		return !globalDisable;
 	}
-	public String serializeToJSON(){
-		return new Gson().toJson(this);
+	/**
+	 * If in default state
+	 * @return
+	 */
+	public boolean isDefault(){
+		if(!globalDisable&&channels.isEmpty()){
+			return true;
+		}
+		else return false;
 	}
 }

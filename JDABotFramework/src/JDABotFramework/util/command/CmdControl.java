@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import JDABotFramework.global.config.BotGlobalConfig;
-import JDABotFramework.global.config.guild.ModuleController;
 import JDABotFramework.wrapper.JDAMessage;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -152,8 +151,6 @@ public class CmdControl {
 	}
 	private boolean CommandEnabled(MessageReceivedEvent event, String command){
 		if(event.getChannelType()==ChannelType.PRIVATE)return true;
-		ModuleController ctrl=config.getGuildConfig(event.getGuild()).getController(modules.get(command));
-		if(ctrl==null)return true;
-		return ctrl.enabled(event.getChannel().getId());
+		return config.getGuildConfig(event.getGuild()).isEnabled(modules.get(command), event.getChannel().getId());
 	}
 }
