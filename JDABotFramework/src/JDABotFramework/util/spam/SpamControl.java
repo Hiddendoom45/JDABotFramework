@@ -37,10 +37,15 @@ public class SpamControl {
 			return spam.isSpam;
 		}
 	}
-	public static void setSpams(){
-		//type(0==local,1==global),limit, timeout
-		typeData.put("summon", new int[]{1,2,60000});
-		typeData.put("units", new int[]{0,4,60000});
+	/**
+	 * Adds group to spamcontroller
+	 * @param group groupName for {@link #isSpam(MessageReceivedEvent, String)} calls
+	 * @param local if it's limited locally to channels or global to the user
+	 * @param limit number of times the group must be triggered within timelimit before it is blocked
+	 * @param timelimit in miliseconds, the amount of time that must pass before user can send limit amount of messages
+	 */
+	public void addSpam(String group,boolean local,int limit,int timelimit){
+		typeData.put(group, new int[]{local?0:1,limit,timelimit});
 	}
 	private static void sendSpamMessage(MessageReceivedEvent event,String type,SpamData spam){
 		if(!spamData.containsKey(event)){
