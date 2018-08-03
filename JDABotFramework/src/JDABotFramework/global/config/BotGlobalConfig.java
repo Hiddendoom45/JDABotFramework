@@ -111,4 +111,12 @@ public class BotGlobalConfig {
 	public GuildConfig getGuildConfig(String id){
 		return guilds.getGuild(id);
 	}
+	/**
+	 * Gets the guild config for a specific guild
+	 * @param g guild object
+	 * @return
+	 */
+	public GuildConfig getGuildConfig(Guild g){
+		return getGuildConfig(g.getId());
+	}
 }

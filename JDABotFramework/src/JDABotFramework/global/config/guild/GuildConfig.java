@@ -13,6 +13,8 @@ public class GuildConfig {
 	private String prefix = null;
 	private String modPrefix = null;
 	private ArrayList<String> modded = new ArrayList<String>();
+	//module controllers, if added, likely something disabled
+	private final HashMap<String,ModuleController> disabled=new HashMap<String,ModuleController>();
 	public final String id;
 	public GuildConfig(String id){
 		this.id=id;
@@ -37,5 +39,8 @@ public class GuildConfig {
 	}
 	public String getModPrefix(){
 		return modPrefix;
+	}
+	public ModuleController getController(String module){
+		return disabled.get(module);
 	}
 }
