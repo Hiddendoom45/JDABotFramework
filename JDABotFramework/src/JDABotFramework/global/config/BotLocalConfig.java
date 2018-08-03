@@ -20,6 +20,10 @@ public class BotLocalConfig extends HashMap<String,Object>{
 	protected BotLocalConfig(JDA jda){
 		instance = jda;
 	}
+	/**
+	 * Get the JDA for this instance
+	 * @return
+	 */
 	public JDA getInstance(){
 		return instance;
 	}

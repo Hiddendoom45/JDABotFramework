@@ -20,6 +20,7 @@ public class BotBuilder {
 	private String token;
 	private int shards=0;
 	private int[] shardIDs=null;
+	private BotConfigStatics stat = new BotConfigStatics();
 	public BotBuilder(String token){
 		this.token=token;
 	}
@@ -44,17 +45,43 @@ public class BotBuilder {
 		this.shardIDs=shards;
 		return this;
 	}
+	/**
+	 * Use to set the static settings for the bot that cannot be changed after launch
+	 * @param stat config statics, edit by setting fields to different value
+	 */
+	public void setConfigStatics(BotConfigStatics stat){
+		this.stat=stat;
+	}
+	/**
+	 * Creates the initializer for the bot that will start it up async
+	 * @return BotInit that is used by {@link DiscordBot} to start up bot
+	 * @throws LoginException
+	 * @throws IllegalArgumentException
+	 * @throws RateLimitedException
+	 * @throws InterruptedException
+	 */
 	public BotInit buildAysnc() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
 		return buildMain(true);
 	}
+	/**
+	 * Creates the initializer for the bot that will start it up blocking
+	 * @return BotInit that is used by {@link DiscordBot} to start up bot
+	 * @throws LoginException
+	 * @throws IllegalArgumentException
+	 * @throws RateLimitedException
+	 * @throws InterruptedException
+	 */
 	public BotInit buildBlocking() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException {
 		return buildMain(false);
 	}
+	//build stuff with things for both async and blocking
 	private BotInit buildMain(boolean async) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
-		BotConfigStatics stat = new BotConfigStatics();
+		//new bot init
 		BotInit bot = new BotInit(new BotGlobalConfig(stat)){
 			public void init() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
+				//different build method if sharding
 				if(shards>0){
+					//if specific shards or just all shards in range
 					if(shardIDs==null){
 						for(int i = 0;i<shards;i++){
 							addInstance(new BotInstance(build(async,i)));
@@ -66,13 +93,14 @@ public class BotBuilder {
 						}
 					}
 				}
-				else{
+				else{//just add instance shard 0
 					addInstance(new BotInstance(build(async,0)));
 				}
 			}
 		};
 		return bot;
 	}
+	//build jda, option for async/blocking
 	private JDA build(boolean async,int Shardnum) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
 		JDABuilder j = new JDABuilder(AccountType.BOT).setToken(token).setAutoReconnect(true).setStatus(OnlineStatus.DO_NOT_DISTURB);
 		if(shards>0){

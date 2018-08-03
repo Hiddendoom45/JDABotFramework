@@ -21,10 +21,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 public abstract class DiscordBot {
 	private final HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
-	protected final BotGlobalConfig config;
-	protected final CmdControl cmd;
-	protected final ListenerAdapter main;
-	private BotInit init;
+	protected final BotGlobalConfig config;//config holding pretty much everything
+	protected final CmdControl cmd;//used to control commands
+	protected final ListenerAdapter main;//bot listener
+	private BotInit init;//initializer, private as only used for startup
 	
 	//create JDABot instance 
 	public DiscordBot(BotInit init){
@@ -52,11 +52,14 @@ public abstract class DiscordBot {
 			instances.put(i, inst);
 			inst.jdaInstance.addEventListener(main);
 		});
+		init=null;//gc
 		setup();
 		// change from default do not disturb setting in BotBuilder
 		setActivity(OnlineStatus.ONLINE);
 	}
-	
+	/**
+	 * Called after bot startup is called,use to setup anything that is needed after JDA has initialized(if build blocking)
+	 */
 	protected abstract void setup();
 	
 	/**
@@ -107,6 +110,7 @@ public abstract class DiscordBot {
 			instances.put(instance.shard, instance);
 			config.addLocal(instance.jdaInstance);
 		}
+		//init hook
 		protected abstract void init() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException;
 	}
 }
