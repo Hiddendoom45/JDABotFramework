@@ -5,6 +5,7 @@ import java.util.HashMap;
 import JDABotFramework.global.config.guild.GuildConfig;
 import JDABotFramework.global.config.guild.GuildConfigController;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
 
 /**
  * Global for config for each unique bot, shared across instances
@@ -19,7 +20,7 @@ public class BotGlobalConfig {
 	private final String ownerID;
 	private String selfID;
 	private boolean sharded;
-	private GuildConfigController guilds = new GuildConfigController();
+	private GuildConfigController guilds = new GuildConfigController(this);
 	public BotGlobalConfig(BotConfigStatics stat){
 		//map variables from configstatics to final vars
 		this.defaultPrefix=stat.prefix;
@@ -38,11 +39,27 @@ public class BotGlobalConfig {
 		return locals.get(shard);
 	}
 	//getters for static config variables
-	public String getPrefix(){
+	public String getDefaultPrefix(){
 		return defaultPrefix;
 	}
-	public String getModPrefix(){
+	public String getDefaultModPrefix(){
 		return defaultModPrefix;
+	}
+	public String getPrefix(Guild g){
+		if(g==null){
+			return defaultPrefix;
+		}
+		else{
+			return guilds.getGuild(g.getId()).getPrefix();
+		}
+	}
+	public String getModPrefix(Guild g){
+		if(g==null){
+			return defaultModPrefix;
+		}
+		else{
+			return guilds.getGuild(g.getId()).getModPrefix();
+		}
 	}
 	public String getOwnerID(){
 		return ownerID;

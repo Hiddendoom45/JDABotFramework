@@ -29,13 +29,13 @@ public class CmdControl {
 	public boolean parseCommands(MessageReceivedEvent event){
 		if(event.getAuthor().getId().equals(config.getSelfID()))return false;
 		String content=event.getMessage().getContent();
-		if(content.startsWith(config.getPrefix())){
+		if(content.startsWith(config.getPrefix(event.getGuild()))){
 			CommandParser.CommandContainer cmd=parser.parse(content, event);
 			if(CommandEnabled(event,cmd.invoke)){
 				return handleCommand(parser.parse(content, event));
 			}
 		}
-		if(content.startsWith(config.getModPrefix())){
+		if(content.startsWith(config.getModPrefix(event.getGuild()))){
 			return handleCommand(parser.parse(content, event));
 		}
 		return false;
@@ -57,6 +57,11 @@ public class CmdControl {
 	}
 	public void addModCommand(String commandName,Command command){
 		modCommands.put(commandName, command);
+	}
+	public void removeCommand(String commandName){
+		commands.remove(commandName);
+		modules.remove(commandName);
+		
 	}
 	private  boolean handleCommand(CommandParser.CommandContainer cmd){
 		System.out.println(cmd.invoke);

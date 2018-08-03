@@ -26,6 +26,12 @@ public class GuildConfig {
 	public ArrayList<String> getModded(){
 		return modded;
 	}
+	public void setPrefix(String prefix){
+		this.prefix=prefix;
+	}
+	public void setModPrefix(String modPrefix){
+		this.modPrefix=modPrefix;
+	}
 	public String getPrefix(){
 		return prefix;
 	}
