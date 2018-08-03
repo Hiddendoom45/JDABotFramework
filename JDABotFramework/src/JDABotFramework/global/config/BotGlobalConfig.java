@@ -17,23 +17,21 @@ public class BotGlobalConfig {
 	private final String defaultPrefix;
 	private final String defaultModPrefix;
 	private final String ownerID;
-	private final String selfID;
-	private final boolean sharded;
+	private String selfID;
+	private boolean sharded;
 	private GuildConfigController guilds = new GuildConfigController();
-	public BotGlobalConfig(BotConfigStatics stat,JDA jda){
+	public BotGlobalConfig(BotConfigStatics stat){
 		//map variables from configstatics to final vars
 		this.defaultPrefix=stat.prefix;
 		this.defaultModPrefix=stat.modPrefix;
 		this.ownerID=stat.ownerID;
-		this.selfID=jda.getSelfUser().getId();
-		//put first/only shard into locals list
-		locals.put(jda.getShardInfo().getShardId(), new BotLocalConfig(jda));
-		//TODO test shard detection
-		if(jda.getShardInfo().getShardTotal()>0) sharded = true;
-		else sharded = false;
-		
 	}
 	public void addLocal(JDA jda){
+		if(locals.isEmpty()){
+			if(jda.getShardInfo().getShardTotal()>0) sharded = true;
+			else sharded = false;
+			selfID = jda.getSelfUser().getId();
+		}
 		locals.put(jda.getShardInfo().getShardId(), new BotLocalConfig(jda));
 	}
 	public BotLocalConfig getLocal(int shard){
