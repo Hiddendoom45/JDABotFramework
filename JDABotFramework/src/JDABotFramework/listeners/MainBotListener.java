@@ -23,7 +23,7 @@ public class MainBotListener extends ListenerAdapter {
 	public MainBotListener(CmdControl cmd,BotGlobalConfig config){
 		this.config=config;
 		addMessageReceived((e,con) -> {
-			return cmd.parseCommands(e);
+			return cmd.parseCommands(e,con);
 		});
 	}
 	/**

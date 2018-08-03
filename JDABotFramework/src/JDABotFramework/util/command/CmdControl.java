@@ -28,7 +28,7 @@ public class CmdControl {
 	public CmdControl(BotGlobalConfig config){
 		this.config = config;
 	}
-	public boolean parseCommands(MessageReceivedEvent event){
+	public boolean parseCommands(MessageReceivedEvent event, BotGlobalConfig con){
 		if(event.getAuthor().getId().equals(config.getSelfID()))return false;//avoid responding to self
 		if(event.getAuthor().isBot())return false;//avoid responding to other bots
 		//extract content
@@ -37,18 +37,18 @@ public class CmdControl {
 		if(content.startsWith(config.getPrefix(event.getGuild()))){
 			CommandParser.CommandContainer cmd=parser.parse(content, event);
 			if(CommandEnabled(event,cmd.invoke)){
-				return handleCommand(parser.parse(content, event));
+				return handleCommand(parser.parse(content, event),con);
 			}
 		}
 		if(content.startsWith(config.getModPrefix(event.getGuild()))){
-			return handleCommand(parser.parse(content, event));
+			return handleCommand(parser.parse(content, event),con);
 		}
 		return false;
 	}
-	public void commandAction(MessageReceivedEvent event, String command, String[] args){
+	public void commandAction(MessageReceivedEvent event, String command, String[] args,BotGlobalConfig con){
 		//action if enabled by modulecontroller
 		if(CommandEnabled(event,command)){
-			commands.get(command).action(args, event);
+			commands.get(command).action(args, event,con);
 		}
 	}
 	public void addCommand(String commandName, Command command, String Module){
@@ -69,13 +69,13 @@ public class CmdControl {
 		modules.remove(commandName);
 		
 	}
-	private  boolean handleCommand(CommandParser.CommandContainer cmd){
+	private  boolean handleCommand(CommandParser.CommandContainer cmd,BotGlobalConfig con){
 		//test if map contains command and that prefix is not for mod commands
 		if(commands.containsKey(cmd.invoke)&&!cmd.isModCmd){
 			//generic command call stuff, first invoke call, if true, also invoke action and finally invoke executed
 			boolean safe=commands.get(cmd.invoke).called(cmd.args, cmd.e);
 			if(safe){
-				commands.get(cmd.invoke).action(cmd.args, cmd.e);
+				commands.get(cmd.invoke).action(cmd.args, cmd.e,con);
 				commands.get(cmd.invoke).executed(safe, cmd.e);
 			}
 			else{
@@ -92,7 +92,7 @@ public class CmdControl {
 			//generic command call stuff, first invoke call, if true, also invoke action and finally invoke executed
 			boolean safe=modCommands.get(cmd.invoke).called(cmd.args, cmd.e);
 			if(safe){
-				modCommands.get(cmd.invoke).action(cmd.args, cmd.e);
+				modCommands.get(cmd.invoke).action(cmd.args, cmd.e,con);
 				modCommands.get(cmd.invoke).executed(safe, cmd.e);
 			}
 			else{
@@ -108,7 +108,7 @@ public class CmdControl {
 					modCommands.get(cmd.args[0]).help(cmd.e);
 				}
 				else{
-					commands.get("modhelp").action(cmd.args, cmd.e);
+					commands.get("modhelp").action(cmd.args, cmd.e,con);
 				}
 			}
 			else{
@@ -116,7 +116,7 @@ public class CmdControl {
 					commands.get(cmd.args[0]).help(cmd.e);
 				}
 				else{
-					commands.get("help").action(cmd.args, cmd.e);
+					commands.get("help").action(cmd.args, cmd.e,con);
 				}
 			}
 			return true;

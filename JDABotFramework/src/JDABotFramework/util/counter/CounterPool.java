@@ -17,6 +17,7 @@ public class CounterPool implements Runnable {
 	private static ArrayList<Integer> toRemove=new ArrayList<Integer>();//counters that are to be terminated
 	private static int num=0;//id for counters, assume never will use all possible int numbers
 	private static CounterPool pool;//counter pool
+	private static boolean initialized=false;
 	public static CounterPool getPool(){
 		if(pool==null){
 			pool=new CounterPool();
@@ -27,7 +28,10 @@ public class CounterPool implements Runnable {
 	 * Executes using the main executor this thread, at 1 sec intervals
 	 */
 	public void setup(){
-		GlobalBot.executor.execute(this);
+		if(!initialized){//protect against multiple inits
+			GlobalBot.executor.execute(this);
+		}
+		initialized=true;
 	}
 	@Override
 	/**
