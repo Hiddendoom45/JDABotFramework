@@ -2,7 +2,6 @@ package JDABotFramework.util.command;
 
 import java.io.File;
 
-import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.wrapper.JDAMessage;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -29,7 +28,7 @@ public class CannedCommand implements Command {
 	}
 
 	@Override
-	public void action(String[] args, MessageReceivedEvent event,BotGlobalConfig con) {
+	public void action(String[] args, MessageReceivedEvent event) {
 		switch(type){
 		case File:
 			JDAMessage.sendFile(event, "", (File)response);

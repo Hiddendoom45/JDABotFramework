@@ -8,7 +8,6 @@ import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.listeners.MainBotListener;
 import JDABotFramework.util.command.CannedCommand;
 import JDABotFramework.util.command.CmdControl;
-import JDABotFramework.util.counter.CounterPool;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
@@ -54,7 +53,6 @@ public abstract class DiscordBot {
 			inst.jdaInstance.addEventListener(main);
 		});
 		init=null;//gc
-		CounterPool.getPool().setup();
 		setup();
 		// change from default do not disturb setting in BotBuilder
 		setActivity(OnlineStatus.ONLINE);

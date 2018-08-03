@@ -1,6 +1,5 @@
 package JDABotFramework.util.command;
 
-import JDABotFramework.global.config.BotGlobalConfig;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
  * Generic class for all commands
@@ -19,9 +18,8 @@ public interface Command {
 	 * Action/execution of command
 	 * @param args arguments for command
 	 * @param event event which command was evoked in
-	 * @param config config for the bot that called that received the event
 	 */
-	public void action(String[] args, MessageReceivedEvent event,BotGlobalConfig config);
+	public void action(String[] args, MessageReceivedEvent event);
 	/**
 	 * Called when command is evoked by itself prints help statment
 	 * @param event event which command was evoked in
