@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.security.auth.login.LoginException;
 
+import JDABotFramework.commands.Ping;
 import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.listeners.MainBotListener;
 import JDABotFramework.util.command.CannedCommand;
@@ -34,6 +35,7 @@ public abstract class DiscordBot {
 		cmd=new CmdControl(init.config);
 		cmd.addCommand("help", new CannedCommand(help()), "core");
 		cmd.addCommand("modhelp", new CannedCommand(modHelp()), "core");
+		cmd.addCommand("ping", new Ping(init.config), "core");
 		main = new MainBotListener(cmd,init.config);
 		config = init.config;
 	}
