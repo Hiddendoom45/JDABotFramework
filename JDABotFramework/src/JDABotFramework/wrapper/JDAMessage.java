@@ -1,6 +1,7 @@
 package JDABotFramework.wrapper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +20,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  *
  */
 public class JDAMessage {
+	private static final ArrayList<EmoteData> emotes = new ArrayList<EmoteData>();
 	public static Message editMessage(Message message,String msg){
 		return message.editMessage(msg).complete();
 	}
@@ -188,12 +190,25 @@ public class JDAMessage {
 	 * @return
 	 */
 	public static String EmoteMessage(MessageReceivedEvent event, String msg){
-		if(event.getJDA().getGuildById(event.getGuild().getId()).getSelfMember().hasPermission(Permission.MESSAGE_EXT_EMOJI)){
-			return ":emote:";
+		if(event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_EXT_EMOJI)){
+			for(EmoteData e:emotes){
+				msg = msg.replace(e.tag, e.emoteValue);
+			}
+			return msg;
 		}
 		else{
-			return "emote";
+			for(EmoteData e:emotes){
+				msg = msg.replace(e.tag, e.strValue);
+			}
+			return msg;
 		}
+	}
+	/**
+	 * Adds a new emote
+	 * @param emote basic data to format emote
+	 */
+	public static void addEmote(EmoteData emote){
+		emotes.add(emote);
 	}
 	/**
 	 * Formats and send message for guild member joining <br/>
