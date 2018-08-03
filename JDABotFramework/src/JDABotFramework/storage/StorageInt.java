@@ -20,7 +20,7 @@ public interface StorageInt {
 	 * @param key
 	 * @param value
 	 */
-	public void putString(String key,String value);
+	public void setString(String key,String value);
 	/**
 	 * Gets a long value from the storage source
 	 * @param key
@@ -32,7 +32,7 @@ public interface StorageInt {
 	 * @param key
 	 * @param value
 	 */
-	public void putLong(String key,long value);
+	public void setLong(String key,long value);
 	/**
 	 * Unsets the value associated with the key
 	 * @param key

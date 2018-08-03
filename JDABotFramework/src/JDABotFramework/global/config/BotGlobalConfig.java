@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.entities.Guild;
  *
  */
 public class BotGlobalConfig {
-	//container for local configs
+	//container for local configs, reinitialized each time
 	private HashMap<Integer,BotLocalConfig> locals = new HashMap<Integer,BotLocalConfig>();
 	//default prefix set by BotConfigStatics
 	private final String defaultPrefix;
