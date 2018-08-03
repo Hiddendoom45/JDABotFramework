@@ -33,7 +33,7 @@ public abstract class DiscordBot {
 		cmd=new CmdControl(init.config);
 		cmd.addCommand("help", new CannedCommand(help()), "core");
 		cmd.addCommand("modhelp", new CannedCommand(modHelp()), "core");
-		main = new MainBotListener(cmd);
+		main = new MainBotListener(cmd,init.config);
 		config = init.config;
 	}
 	public BotGlobalConfig getConfig(){

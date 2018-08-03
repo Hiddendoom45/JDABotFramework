@@ -1,7 +1,8 @@
 package JDABotFramework.listeners;
 
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
+import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.util.command.CmdControl;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -14,11 +15,14 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *
  */
 public class MainBotListener extends ListenerAdapter {
-	private Predicate<ReadyEvent> ready = null;//no list, will be chained
-	private Predicate<MessageReceivedEvent> messageReceived = null;
+	private BiPredicate<ReadyEvent,BotGlobalConfig> ready = null;//no list, will be chained
+	private BiPredicate<MessageReceivedEvent,BotGlobalConfig> messageReceived = null;
 	
-	public MainBotListener(CmdControl cmd){
-		addMessageReceived(e ->{
+	private final BotGlobalConfig config;
+	
+	public MainBotListener(CmdControl cmd,BotGlobalConfig config){
+		this.config=config;
+		addMessageReceived((e,con) -> {
 			return cmd.parseCommands(e);
 		});
 	}
@@ -27,14 +31,14 @@ public class MainBotListener extends ListenerAdapter {
 	 * allow next event added to be executed; 
 	 * @param ready
 	 */
-	public void addReady(Predicate<ReadyEvent> ready){
+	public void addReady(BiPredicate<ReadyEvent,BotGlobalConfig> ready){
 		if(this.ready==null){
 			this.ready=ready;
 		}
 		else{
-			this.ready = event -> {
-				if(!this.ready.test(event)){
-					return ready.test(event);
+			this.ready = (event,con) -> {
+				if(!this.ready.test(event,con)){
+					return ready.test(event,con);
 				}
 				else return true;
 			};
@@ -45,14 +49,14 @@ public class MainBotListener extends ListenerAdapter {
 	 * to allow next event added to be executed.
 	 * @param messageReceived
 	 */
-	public void addMessageReceived(Predicate<MessageReceivedEvent> messageReceived){
+	public void addMessageReceived(BiPredicate<MessageReceivedEvent,BotGlobalConfig> messageReceived){
 		if(this.messageReceived==null){
 			this.messageReceived=messageReceived;
 		}
 		else{
-			this.messageReceived = event -> {
-				if(!this.messageReceived.test(event)){
-					return messageReceived.test(event);
+			this.messageReceived = (event,con) -> {
+				if(!this.messageReceived.test(event,con)){
+					return messageReceived.test(event,con);
 				}
 				else return true;
 			};
@@ -62,8 +66,15 @@ public class MainBotListener extends ListenerAdapter {
 	@Override
 	public void onReady(ReadyEvent event){
 		if(!(ready==null)){
-			ready.test(event);
+			ready.test(event,config);
 		}
+	}
+	@Override
+	public void onMessageReceived(MessageReceivedEvent event){
+		if(!(messageReceived==null)){
+			messageReceived.test(event,config);
+		}
+		
 	}
 	
 	
