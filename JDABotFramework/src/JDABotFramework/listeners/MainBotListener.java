@@ -41,7 +41,7 @@ public class MainBotListener extends ListenerAdapter {
 		}
 	}
 	/**
-	 * Effectively a consumer for onMessageReceived event, return true to prevent next hndler from being executed, false
+	 * Effectively a consumer for onMessageReceived event, return true to prevent next handler from being executed, false
 	 * to allow next event added to be executed.
 	 * @param messageReceived
 	 */

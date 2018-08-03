@@ -51,28 +51,26 @@ public class BotBuilder {
 		return buildMain(false);
 	}
 	private BotInit buildMain(boolean async) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
-		JDA jda = null;
-		BotInit bot = null;
-		if(shards>0){
-			if(shardIDs==null){
-				jda = build(async,0);
-				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
-				for(int i =1;i<shards;i++){
-					bot.addInstance(new BotInstance(build(async,i)));
+		BotConfigStatics stat = new BotConfigStatics();
+		BotInit bot = new BotInit(new BotGlobalConfig(stat)){
+			public void init() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
+				if(shards>0){
+					if(shardIDs==null){
+						for(int i = 0;i<shards;i++){
+							addInstance(new BotInstance(build(async,i)));
+						}
+					}
+					else{
+						for(int i = 0;i<shardIDs.length;i++){
+							addInstance(new BotInstance(build(async,shardIDs[i])));
+						}
+					}
+				}
+				else{
+					addInstance(new BotInstance(build(async,0)));
 				}
 			}
-			else{
-				jda = build(async,shardIDs[0]);
-				bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
-				for(int i = 1;i<shardIDs.length;i++){
-					bot.addInstance(new BotInstance(build(async,shardIDs[i])));
-				}
-			}
-		}
-		else{
-			jda = build(async,0);
-			bot = new BotInit(new BotInstance(jda),new BotGlobalConfig(new BotConfigStatics(),jda));
-		}
+		};
 		return bot;
 	}
 	private JDA build(boolean async,int Shardnum) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
