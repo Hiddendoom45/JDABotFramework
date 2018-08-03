@@ -2,7 +2,9 @@ package JDABotFramework.wrapper;
 
 import java.io.File;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
+import JDABotFramework.global.GlobalBot;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -36,24 +38,22 @@ public class JDAMessage {
 	 * @param msg message to send in response
 	 * @param timeout time in seconds after which the message will be deleted
 	 */
-//	public static void sendTempMessage(MessageReceivedEvent event, String msg,long timeout){
-//		final MessageReceivedEvent FEvent=event;
-//		final String FMsg=msg;
-//		final long FTimeout=timeout;
-//		Settings.executor.execute(new Runnable(){
-//			public void run(){
-//				try {
-//					String id=sendMessageFormated(FEvent, FMsg).getId();
-//					TimeUnit.SECONDS.sleep(FTimeout);
-//					FEvent.getChannel().deleteMessageById(id).complete();
-//				} catch (Exception e) {
-//					Log.log("ERROR", "error sending delayed message");
-//					Log.logShortError(e, 5);
-//				}
-//				
-//			}
-//		});
-//	}
+	public static void sendTempMessage(MessageReceivedEvent event, String msg,long timeout){
+		final MessageReceivedEvent FEvent=event;
+		final String FMsg=msg;
+		final long FTimeout=timeout;
+		GlobalBot.executor.execute(new Runnable(){
+			public void run(){
+				try {
+					String id=sendMessageFormated(FEvent, FMsg).getId();
+					TimeUnit.SECONDS.sleep(FTimeout);
+					FEvent.getChannel().deleteMessageById(id).complete();
+				} catch (Exception e) {
+				}
+				
+			}
+		});
+	}
 	/**
 	 * 
 	 * Formats the message <br/>
@@ -184,7 +184,7 @@ public class JDAMessage {
 	/**
 	 * Adds custom emotes to message <br/>
 	 * @param event
-	 * @param msg
+	 * @param msg message to add emotes to 
 	 * @return
 	 */
 	public static String EmoteMessage(MessageReceivedEvent event, String msg){
