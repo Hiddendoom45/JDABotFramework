@@ -15,22 +15,21 @@ import net.dv8tion.jda.core.entities.Guild;
 public class BotGlobalConfig {
 	//container for local configs, reinitialized each time
 	private HashMap<Integer,BotLocalConfig> locals = new HashMap<Integer,BotLocalConfig>();
-	//default prefix set by BotConfigStatics
-	private final String defaultPrefix;
-	//default modprefix set by BotConfigStatics
-	private final String defaultModPrefix;
-	//Owner ID
-	private final String ownerID;
-	//ID of the bot istself, automatically set
-	private String selfID;
-	//autodetection of if bot is sharded
-	private boolean sharded;
+	private final String defaultPrefix;//default prefix set by BotConfigStatics
+	private final String defaultModPrefix;//default modprefix set by BotConfigStatics
+	private final String ownerID;//Owner ID
+	private final String overrideArg;//argument for override commands
+	private final String overridePrefix;
+	private String selfID;//ID of the bot istself, automatically set
+	private boolean sharded;//autodetection of if bot is sharded
 	private GuildConfigController guilds = new GuildConfigController(this);
 	public BotGlobalConfig(BotConfigStatics stat){
 		//map variables from configstatics to final vars
 		this.defaultPrefix=stat.prefix;
 		this.defaultModPrefix=stat.modPrefix;
 		this.ownerID=stat.ownerID;
+		this.overrideArg=stat.overrideArg;
+		this.overridePrefix=stat.overridePrefix;
 	}
 	/**
 	 * Adds an instnace of JDA, creating the local config for it based on its shardID
@@ -96,6 +95,12 @@ public class BotGlobalConfig {
 	//getters
 	public String getOwnerID(){
 		return ownerID;
+	}
+	public String getOverrideArg(){
+		return overrideArg;
+	}
+	public String getOverridePrefix(){
+		return overridePrefix;
 	}
 	public String getSelfID(){
 		return selfID;

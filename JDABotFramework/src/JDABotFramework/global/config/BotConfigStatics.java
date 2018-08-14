@@ -17,4 +17,12 @@ public class BotConfigStatics {
 	 * ID for the owner, set so that the owner can access all bot functionalities regardless of permissions
 	 */
 	public String ownerID = "0";
+	/**
+	 * Argument for override commands aka super commands
+	 */
+	public String overrideArg = "-";
+	/**
+	 * Prefix for override commands aka super commands
+	 */
+	public String overridePrefix = "!";
 }
