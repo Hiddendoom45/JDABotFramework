@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 import JDABotFramework.commands.Ping;
 import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.listeners.MainBotListener;
+import JDABotFramework.react.ReactionController;
 import JDABotFramework.util.command.CannedCommand;
 import JDABotFramework.util.command.CmdControl;
 import JDABotFramework.util.counter.CounterPool;
@@ -25,6 +26,7 @@ public abstract class DiscordBot {
 	private final HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
 	protected final BotGlobalConfig config;//config holding pretty much everything
 	protected final CmdControl cmd;//used to control commands
+	protected final ReactionController react;//used to add reactions etc.
 	protected final ListenerAdapter main;//bot listener
 	private BotInit init;//initializer, private as only used for startup
 	
@@ -36,7 +38,8 @@ public abstract class DiscordBot {
 		cmd.addCommand("help", new CannedCommand(help()), "core");
 		cmd.addCommand("modhelp", new CannedCommand(modHelp()), "core");
 		cmd.addCommand("ping", new Ping(init.config), "core");
-		main = new MainBotListener(cmd,init.config);
+		react = new ReactionController(init.config);
+		main = new MainBotListener(cmd,react,init.config);
 		config = init.config;
 	}
 	public BotGlobalConfig getConfig(){

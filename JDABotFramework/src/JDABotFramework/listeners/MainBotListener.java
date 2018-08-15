@@ -3,9 +3,11 @@ package JDABotFramework.listeners;
 import java.util.function.BiPredicate;
 
 import JDABotFramework.global.config.BotGlobalConfig;
+import JDABotFramework.react.ReactionController;
 import JDABotFramework.util.command.CmdControl;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
@@ -17,10 +19,11 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class MainBotListener extends ListenerAdapter {
 	private BiPredicate<ReadyEvent,BotGlobalConfig> ready = null;//no list, will be chained
 	private BiPredicate<MessageReceivedEvent,BotGlobalConfig> messageReceived = null;
+	private BiPredicate<MessageReactionAddEvent,BotGlobalConfig> emoteAdd = null;
 	
 	private final BotGlobalConfig config;
 	
-	public MainBotListener(CmdControl cmd,BotGlobalConfig config){
+	public MainBotListener(CmdControl cmd,ReactionController react,BotGlobalConfig config){
 		this.config=config;
 		addMessageReceived((e,con) -> {
 			return cmd.parseCommands(e);
@@ -62,6 +65,19 @@ public class MainBotListener extends ListenerAdapter {
 			};
 		}
 	}
+	public void addMessageReactionAdd(BiPredicate<MessageReactionAddEvent,BotGlobalConfig> emoteAdd){
+		if(this.emoteAdd==null){
+			this.emoteAdd=emoteAdd;
+		}
+		else{
+			this.emoteAdd = (event,con) -> {
+				if(!this.emoteAdd.test(event, con)){
+					return emoteAdd.test(event, con);
+				}
+				else return true;
+			};
+		}
+	}
 	//overrides for listeners in the ListenerAdapter
 	@Override
 	public void onReady(ReadyEvent event){
@@ -76,6 +92,10 @@ public class MainBotListener extends ListenerAdapter {
 		}
 		
 	}
-	
-	
+	@Override
+	public void onMessageReactionAdd(MessageReactionAddEvent event) {
+		if(!(emoteAdd==null)){
+			emoteAdd.test(event, config);
+		}
+	}
 }
