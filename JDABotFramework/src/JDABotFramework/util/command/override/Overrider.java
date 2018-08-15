@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  *
  */
 public class Overrider {
-	private final HashMap<Integer,Long> overrides=new HashMap<Integer,Long>();//map of all the current override keysbeing used
+	private final HashMap<Integer,Long> overrides=new HashMap<Integer,Long>();//map of all the current override keys being used
 	private final ArrayList<OverrideKey> keys = new ArrayList<OverrideKey>();//array of all still available keys
 	private final HashMap<String,OverrideCommand> commands=new HashMap<String,OverrideCommand>();
 	private final BotGlobalConfig config;
