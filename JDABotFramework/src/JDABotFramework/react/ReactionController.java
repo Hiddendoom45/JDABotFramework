@@ -16,11 +16,16 @@ public class ReactionController implements Runnable {
 	private HashMap<String,Reaction> storedReactions=new HashMap<String,Reaction>();//holds the reaction to invoke for each message with one
 	private HashMap<String,Message> storedMessages=new HashMap<String,Message>();//hold message to avoid calling api again to get message
 	private HashMap<Long, String> killTimes=new HashMap<Long, String>();// holds long for kill time and string for
-	private BotGlobalConfig config;
+	private BotGlobalConfig config;//config for some global stuff
 	public ReactionController(BotGlobalConfig config){
 		this.config=config;
 		setup();
 	}
+	/**
+	 * Parses a reactionAddEvent checking if it's registered by any Reaction
+	 * @param event
+	 * @return true if matching Reaction found
+	 */
 	public boolean parseReaction(MessageReactionAddEvent event){
 		if(!event.getUser().getId().equals(config.getSelfID())){// don't trigger if self
 			String ID=event.getMessageId();

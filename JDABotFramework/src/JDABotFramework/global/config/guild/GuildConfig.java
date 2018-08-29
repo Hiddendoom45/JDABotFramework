@@ -12,8 +12,9 @@ public class GuildConfig {
 	private HashMap<String,String> config = new HashMap<String,String>();
 	private String prefix = null;
 	private String modPrefix = null;
+	//private list of all users that have been explicitly given mod permissions
 	private ArrayList<String> modded = new ArrayList<String>();
-	private Runnable update = () -> {};
+	private Runnable update = () -> {};//update this guild in w/e stuff is stored called whenever a value changes
 	//module controllers, if added, likely something disabled
 	private final HashMap<String,ModuleController> disabled=new HashMap<String,ModuleController>();
 	public final String id;
@@ -44,6 +45,7 @@ public class GuildConfig {
 	public String getModPrefix(){
 		return modPrefix;
 	}
+	//stuff in relation to the module controller
 	public boolean isEnabled(String module,String channelID){
 		ModuleController m = disabled.get(module);
 		if(m==null) return true;
@@ -83,6 +85,7 @@ public class GuildConfig {
 		}
 		update.run();
 	}
+	//sets a hook that is called whenever some value is updated
 	public void setUpdateHook(Runnable r){
 		update=r;
 		if(update==null){
