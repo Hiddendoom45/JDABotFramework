@@ -14,7 +14,6 @@ import JDABotFramework.util.counter.CounterPool;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * A Discord Bot, holding all instances/shards of the bot.
@@ -27,7 +26,7 @@ public abstract class DiscordBot {
 	protected final BotGlobalConfig config;//config holding pretty much everything
 	protected final CmdControl cmd;//used to control commands
 	protected final ReactionController react;//used to add reactions etc.
-	protected final ListenerAdapter main;//bot listener
+	protected final MainBotListener main;//bot listener
 	private BotInit init;//initializer, private as only used for startup
 	
 	//create JDABot instance 
