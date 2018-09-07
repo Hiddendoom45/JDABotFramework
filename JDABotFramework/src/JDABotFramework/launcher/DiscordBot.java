@@ -18,7 +18,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * A Discord Bot, holding all instances/shards of the bot.
- * Extend to create a new bot. Use {@link BotBuilder} to create the BotInit object needed to initialize bot.
+ * Extend to create a new bot. Use {@link BotBuilder} to create the {@link BotInit} object needed to initialize bot.
  * @author Allen
  *
  */
@@ -31,6 +31,10 @@ public abstract class DiscordBot {
 	private BotInit init;//initializer, private as only used for startup
 	
 	//create JDABot instance 
+	/**
+	 * Creates a new DiscordBot Object. Generally one per separate bot. 
+	 * @param init
+	 */
 	public DiscordBot(BotInit init){
 		this.init = init;
 		//copy over stuff from BotInit
@@ -42,6 +46,10 @@ public abstract class DiscordBot {
 		main = new MainBotListener(cmd,react,init.config);
 		config = init.config;
 	}
+	/**
+	 * Gets the global config object, contains most of the settings for the bot
+	 * @return
+	 */
 	public BotGlobalConfig getConfig(){
 		return config;
 	}
