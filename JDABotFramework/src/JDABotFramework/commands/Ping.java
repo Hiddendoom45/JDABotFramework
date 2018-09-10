@@ -7,9 +7,18 @@ import JDABotFramework.util.command.Command;
 import JDABotFramework.wrapper.JDAMessage;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-
+/**
+ * A very generic ping command, uses the timestamp of the message received and the timestamp
+ * of the message sent to compute the heartbeat ping, avoids the issue of time skews between machine and discord servers.
+ * @author Allen
+ *
+ */
 public class Ping implements Command {
 	private final BotGlobalConfig config;
+	/**
+	 * Basic constructor
+	 * @param config Used to get the default prefix
+	 */
 	public Ping(BotGlobalConfig config){
 		this.config=config;
 	}
@@ -54,8 +63,7 @@ public class Ping implements Command {
 
 	@Override
 	public void executed(boolean sucess, MessageReceivedEvent event) {
-		// TODO Auto-generated method stub
-
+		//Do Nothing
 	}
 
 }
