@@ -37,11 +37,10 @@ public class BotGlobalConfig {
 	 */
 	public void addLocal(JDA jda){
 		if(locals.isEmpty()){
-			if(jda.getShardInfo().getShardTotal()>0) sharded = true;
-			else sharded = false;
+			sharded = !(jda.getShardInfo()==null);
 			selfID = jda.getSelfUser().getId();
 		}
-		locals.put(jda.getShardInfo().getShardId(), new BotLocalConfig(jda));
+		locals.put(jda.getShardInfo()==null?0:jda.getShardInfo().getShardId(), new BotLocalConfig(jda));
 	}
 	/**
 	 * Gets the local config for a specific shard

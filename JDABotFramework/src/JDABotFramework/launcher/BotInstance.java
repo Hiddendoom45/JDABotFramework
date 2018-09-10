@@ -19,8 +19,12 @@ public class BotInstance {
 	public final int shard;
 	public BotInstance(JDA jda){
 		this.jdaInstance=jda;
-		shard = jda.getShardInfo().getShardId();
+		int s;
+		try{
+			s = jda.getShardInfo().getShardId(); 
+		}catch(NullPointerException e){
+			s=0;//no sharding, set as dfault 0 shard
+		}
+		shard = s;
 	}
-	
-	
 }
