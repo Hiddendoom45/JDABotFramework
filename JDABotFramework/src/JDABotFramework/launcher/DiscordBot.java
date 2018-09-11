@@ -5,14 +5,16 @@ import java.util.HashMap;
 import javax.security.auth.login.LoginException;
 
 import JDABotFramework.commands.Ping;
+import JDABotFramework.global.Help;
+import JDABotFramework.global.HelpInterface;
 import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.listeners.MainBotListener;
 import JDABotFramework.react.ReactionController;
-import JDABotFramework.util.command.CannedCommand;
 import JDABotFramework.util.command.CmdControl;
 import JDABotFramework.util.counter.CounterPool;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
@@ -21,7 +23,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  * @author Allen
  *
  */
-public abstract class DiscordBot {
+public abstract class DiscordBot implements HelpInterface{
 	private final HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
 	protected final BotGlobalConfig config;//config holding pretty much everything
 	protected final CmdControl cmd;//used to control commands
@@ -38,9 +40,13 @@ public abstract class DiscordBot {
 		this.init = init;
 		//copy over stuff from BotInit
 		cmd=new CmdControl(init.config);
-		cmd.addCommand("help", new CannedCommand(help()), "core");
-		cmd.addCommand("modhelp", new CannedCommand(modHelp()), "core");
 		cmd.addCommand("ping", new Ping(init.config), "core");
+		Help h = new Help(this);
+		cmd.addCommand("help", h.help, "core");
+		//add mod command
+		cmd.addModCommand("help", h.modHelp);
+		
+		//init other stuff
 		react = new ReactionController(init.config);
 		main = new MainBotListener(cmd,react,init.config);
 		config = init.config;
@@ -80,17 +86,19 @@ public abstract class DiscordBot {
 	 * Generic help message for the bot
 	 * </p>
 	 * To override add a command to {@link #cmd} with the key "help"
+	 * @param prefix the prefix for the current guild
 	 * @return
 	 */
-	protected abstract String help();
+	public abstract String help(MessageReceivedEvent event);
 	
 	/**
 	 * Generic mod help message for the bot.
 	 * </p>
 	 * To override add a command to {@link #cmd} with the key "modhelp"
+	 * @param prefix the mod prefix for the current guild
 	 * @return
 	 */
-	protected abstract String modHelp();
+	public abstract String modHelp(MessageReceivedEvent event);
 	
 	/**
 	 * Set the game for all instances
