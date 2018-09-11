@@ -232,11 +232,15 @@ public class MainBotListener extends ListenerAdapter {
 	
 	public MainBotListener(CmdControl cmd,ReactionController react,BotGlobalConfig config){
 		this.config=config;
+		//add all the chains stuffs
 		buildChains();
+		//add soem basic listeners, for command controller, reaction controller
 		getEventChain(MessageReceivedEvent.class)
 			.addListener("Command Controller",(e,con) -> {
 			return cmd.parseCommands(e);
 		});
+		getEventChain(MessageReceivedEvent.class)
+			.addListener("Prefix Listener", new PrefixListener());
 		getEventChain(MessageReactionAddEvent.class)
 			.addListener("Reaction Controller", (e,con)->{
 			return react.parseReaction(e);
