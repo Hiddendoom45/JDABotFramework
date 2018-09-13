@@ -245,6 +245,10 @@ public class MainBotListener extends ListenerAdapter {
 			.addListener("Reaction Controller", (e,con)->{
 			return react.parseReaction(e);
 		});
+		getEventChain(MessageReactionRemoveEvent.class)
+			.addListener("ReactionController", (e,con)->{
+				return react.parseReaction(e);
+		});
 	}
 	
 	/**

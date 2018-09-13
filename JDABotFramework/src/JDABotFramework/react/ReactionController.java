@@ -6,6 +6,7 @@ import JDABotFramework.global.GlobalBot;
 import JDABotFramework.global.config.BotGlobalConfig;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 
 /**
  * Handles any reaction events
@@ -46,7 +47,32 @@ public class ReactionController implements Runnable {
 			}
 		}
 		return false;
-		
+	}
+	/**
+	 * Parses a reactionRemoveEvent checking if it's registered by any Reaction
+	 * @param event
+	 * @return true if matching Reaction found
+	 */
+	public boolean parseReaction(MessageReactionRemoveEvent event){
+		if(!event.getUser().getId().equals(config.getSelfID())){// don't trigger if self
+			String ID=event.getMessageId();
+			if(storedReactions.containsKey(ID)){
+				//same as commands, check if valid, then execute it
+				boolean safe=storedReactions.get(ID).called(event, event.getReaction().getEmote());
+				if(safe){//if reaction triggers something
+					Message msg=storedReactions.get(ID).action(event, event.getReaction().getEmote(), storedMessages.get(ID));
+					storedMessages.put(ID, msg);//update the stored message
+					try{
+						event.getReaction().removeReaction(event.getUser()).queue();//remove it so it can be retriggered
+					}catch(net.dv8tion.jda.core.exceptions.PermissionException e){
+						
+					}
+				}
+				storedReactions.get(ID).executed(event);
+				return safe;//safe basically determines if trigger
+			}
+		}
+		return false;
 	}
 	/**
 	 * 

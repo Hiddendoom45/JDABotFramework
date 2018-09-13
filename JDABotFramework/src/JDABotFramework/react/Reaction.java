@@ -3,6 +3,7 @@ package JDABotFramework.react;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 
 /**
  * Interface to deal with reaction responses must be implemented for a message to respond to reactions
@@ -23,6 +24,19 @@ public interface Reaction {
 	 * Supposed to be for cleanup but instead typically used to log stuffs
 	 */
 	public void executed(MessageReactionAddEvent event);
+	/**
+	 * Called to determine if it's to be executed 
+	 */
+	public boolean called(MessageReactionRemoveEvent event, ReactionEmote react);
+	/**
+	 * main bulk of reaction, what to do in response
+	 * @return new updated message if it's updated, else the message parameter passed
+	 */
+	public Message action(MessageReactionRemoveEvent event, ReactionEmote react,Message msg);
+	/**
+	 * Supposed to be for cleanup but instead typically used to log stuffs
+	 */
+	public void executed(MessageReactionRemoveEvent event);
 	/**
 	 * time before reactions for the message will no longer be registered
 	 * @return in milliseconds
