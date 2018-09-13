@@ -106,6 +106,7 @@ public class JDAMessage {
 	 * @return message that was sent
 	 */
 	public static Message sendMessage(MessageReceivedEvent event,String msg){
+		if(msg==null) return null;//avoid null message errors
 		if(msg.length()>2000){
 			Vector<String> toSend=splitMessage(msg);
 			for(String s:toSend){
