@@ -73,6 +73,7 @@ public abstract class DiscordBot implements HelpInterface{
 		});
 		init=null;//gc
 		CounterPool.getPool().setup();
+		react.setup();
 		setup();
 		// change from default do not disturb setting in BotBuilder
 		setActivity(OnlineStatus.ONLINE);

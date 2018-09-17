@@ -79,7 +79,7 @@ public class ReactionController implements Runnable {
 	 * @param msg message for the bot to react to 
 	 * @param reaction reaction for the bot to use when something occurs
 	 */
-	public void addReaction(Message msg,Reaction reaction){
+	public synchronized void addReaction(Message msg,Reaction reaction){
 		storedReactions.put(msg.getId(), reaction);
 		storedMessages.put(msg.getId(), msg);
 		if(reaction.getTimeout()>0){
