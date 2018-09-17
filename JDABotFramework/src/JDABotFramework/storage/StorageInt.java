@@ -1,5 +1,7 @@
 package JDABotFramework.storage;
 
+import java.util.Optional;
+
 /**
  * Interface with w/e is storing data
  * Semi based on databases but with a few extra methods to account for cloud saving the data etc.
@@ -26,7 +28,7 @@ public interface StorageInt {
 	 * @param key
 	 * @return
 	 */
-	public long getLong(String key);
+	public Optional<Long> getLong(String key);
 	/**
 	 * Puts a long value in the storage source
 	 * @param key
