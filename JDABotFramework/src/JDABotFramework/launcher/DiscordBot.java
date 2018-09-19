@@ -25,6 +25,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  */
 public abstract class DiscordBot implements HelpInterface{
 	private final HashMap<Integer,BotInstance> instances = new HashMap<Integer,BotInstance>();
+	private boolean shutdown = false;
 	protected final BotGlobalConfig config;//config holding pretty much everything
 	protected final CmdControl cmd;//used to control commands
 	protected final ReactionController react;//used to add reactions etc.
@@ -50,6 +51,11 @@ public abstract class DiscordBot implements HelpInterface{
 		react = new ReactionController(init.config);
 		main = new MainBotListener(cmd,react,init.config);
 		config = init.config;
+		Runtime.getRuntime().addShutdownHook(new Thread(){ 
+			public void run(){
+				shutdownBot();
+			}
+		});
 	}
 	/**
 	 * Gets the global config object, contains most of the settings for the bot
@@ -66,6 +72,7 @@ public abstract class DiscordBot implements HelpInterface{
 	 * @throws InterruptedException
 	 */
 	public void startup() throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException{
+		shutdownCheck();
 		init.init();
 		init.instances.forEach((i,inst)->{
 			instances.put(i, inst);
@@ -82,6 +89,26 @@ public abstract class DiscordBot implements HelpInterface{
 	 * Called after bot startup is called,use to setup anything that is needed after JDA has initialized(if build blocking)
 	 */
 	protected abstract void setup();
+	
+	/**
+	 * Shutdown handler
+	 */
+	protected void shutdownBot(){
+		//avoid duplicate calls to shutdown;
+		if(!shutdown){
+			shutdown();
+			shutdown = true;
+		}
+	}
+	
+	protected void shutdownCheck(){
+		if(shutdown) throw new IllegalStateException("Bot has been shut down");
+	}
+	
+	/**
+	 * Called to shutdown the bot or when the shutdown hook triggers
+	 */
+	protected abstract void shutdown();
 	
 	/**
 	 * Generic help message for the bot
@@ -106,6 +133,7 @@ public abstract class DiscordBot implements HelpInterface{
 	 * @param name
 	 */
 	public void setGame(String name){
+		shutdownCheck();
 		instances.forEach((i,inst)->{
 			inst.jdaInstance.getPresence().setGame(Game.of(name));
 		});
@@ -115,6 +143,7 @@ public abstract class DiscordBot implements HelpInterface{
 	 * @param status
 	 */
 	public void setActivity(OnlineStatus status){
+		shutdownCheck();
 		instances.forEach((i,inst)->{
 			inst.jdaInstance.getPresence().setStatus(status);
 		});
