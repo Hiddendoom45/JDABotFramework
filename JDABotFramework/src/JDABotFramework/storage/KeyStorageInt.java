@@ -4,11 +4,11 @@ import java.util.Optional;
 
 /**
  * Interface with w/e is storing data
- * Semi based on databases but with a few extra methods to account for cloud saving the data etc.
+ * A Key-Value based storage source, can simply be a map that is serialized or a K-V database.
  * @author Allen
  *
  */
-public interface StorageInt {
+public interface KeyStorageInt {
 	
 	/**
 	 * Gets a string value from the storage source

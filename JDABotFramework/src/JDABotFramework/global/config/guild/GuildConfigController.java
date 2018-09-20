@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 
 import JDABotFramework.global.config.BotGlobalConfig;
-import JDABotFramework.storage.StorageInt;
+import JDABotFramework.storage.KeyStorageInt;
 
 /**
  * Holds all the separate guild configs (if anything changes) and also 
@@ -14,20 +14,20 @@ import JDABotFramework.storage.StorageInt;
  */
 public class GuildConfigController {
 	private HashMap<String,GuildConfig> guilds = new HashMap<String,GuildConfig>();//holds all the guilds key=G:<guildID>
-	private StorageInt store;//place to save things to
+	private KeyStorageInt store;//place to save things to
 	BotGlobalConfig gConfig;
 	public GuildConfigController(BotGlobalConfig gConfig){
 		this.gConfig=gConfig;
 	}
 	
-	public void setStorageSource(StorageInt store){
+	public void setStorageSource(KeyStorageInt store){
 		if(!(store==null)){
 			this.store=store;
 		}
 	}
 	/**
 	 * Load values from storage source
-	 * storage source needs to be set using {@link #setStorageSource(StorageInt)}
+	 * storage source needs to be set using {@link #setStorageSource(KeyStorageInt)}
 	 */
 	public void load(){
 		if(!(store==null)){
@@ -38,7 +38,7 @@ public class GuildConfigController {
 	 * Load values from storage source
 	 * @param store
 	 */
-	public void load(StorageInt store){
+	public void load(KeyStorageInt store){
 		//index containing keys for all the different guilds, stored in this way so that updating is faster
 		store.pull();
 		String[] index = new Gson().fromJson(store.getString("guildIndex"), String[].class);
@@ -72,12 +72,12 @@ public class GuildConfigController {
 	 * @param id guildID
 	 * @param store place to save it
 	 */
-	public void update(String id,StorageInt store){
+	public void update(String id,KeyStorageInt store){
 		store.setString("G:"+id, new Gson().toJson(guilds.get("G:"+id)));
 	}
 	/**
 	 * Only update guild index, nothing else
-	 * storage source needs to be set using {@link #setStorageSource(StorageInt)}
+	 * storage source needs to be set using {@link #setStorageSource(KeyStorageInt)}
 	 */
 	public void quickSave(){
 		if(!(store==null)){
@@ -88,14 +88,14 @@ public class GuildConfigController {
 	 * Only update guild index, nothing else
 	 * @param store
 	 */
-	public void quickSave(StorageInt store){
+	public void quickSave(KeyStorageInt store){
 		//update index
 		store.setString("guildIndex", new Gson().toJson(guilds.keySet().toArray(new String[]{})));
 		store.push();
 	}
 	/**
 	 * Fully update everything pushing to the storage source.
-	 * storage source needs to be set using {@link #setStorageSource(StorageInt)} 
+	 * storage source needs to be set using {@link #setStorageSource(KeyStorageInt)} 
 	 */
 	public void save(){
 		if(!(store==null)){
@@ -106,7 +106,7 @@ public class GuildConfigController {
 	 * Fully update everything pushing to storage source
 	 * @param store
 	 */
-	public void save(StorageInt store){
+	public void save(KeyStorageInt store){
 		//update index
 		store.setString("guildIndex", new Gson().toJson(guilds.keySet().toArray(new String[]{})));
 		for(String s:guilds.keySet()){
