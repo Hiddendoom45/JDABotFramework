@@ -58,7 +58,18 @@ public class Help implements BiPredicate<MessageReceivedEvent,BotGlobalConfig> {
 
 	@Override
 	public boolean test(MessageReceivedEvent t, BotGlobalConfig u) {
-		// TODO Auto-generated method stub
+		if(!t.getAuthor().getAvatarId().equals(t.getJDA().getSelfUser().getId())){
+			if(t.getMessage().isMentioned(t.getJDA().getSelfUser())){
+				if(t.getMessage().getContent().contains("mod help")){
+					helpInt.modHelp(t);
+					return true;
+				}
+				else if(t.getMessage().getContent().contains("help")){
+					helpInt.help(t);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
