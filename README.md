@@ -10,6 +10,9 @@ Currently a WIP wherein all interfaces are not finalized and may be subject to c
 
 For an example of a bot using this interface see the [SearchBotv2 repository](https://github.com/Hiddendoom45/SearchBotv2)
 
+
+This is simlar to [JDA-Utilities](https://github.com/JDA-Applications/JDA-Utilities) as though designed to make creating a simple bot very easy.
+
 ## API documentation 
 
 Will not be added until it is in a more finalized state
