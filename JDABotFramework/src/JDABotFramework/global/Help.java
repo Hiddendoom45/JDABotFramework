@@ -60,11 +60,11 @@ public class Help implements BiPredicate<MessageReceivedEvent,BotGlobalConfig> {
 	public boolean test(MessageReceivedEvent t, BotGlobalConfig u) {
 		if(!t.getAuthor().getAvatarId().equals(t.getJDA().getSelfUser().getId())){
 			if(t.getMessage().isMentioned(t.getJDA().getSelfUser())){
-				if(t.getMessage().getContent().contains("mod help")){
+				if(t.getMessage().getContentRaw().contains("mod help")){
 					helpInt.modHelp(t);
 					return true;
 				}
-				else if(t.getMessage().getContent().contains("help")){
+				else if(t.getMessage().getContentRaw().contains("help")){
 					helpInt.help(t);
 					return true;
 				}

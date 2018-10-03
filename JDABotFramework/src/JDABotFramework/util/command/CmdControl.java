@@ -32,7 +32,7 @@ public class CmdControl {
 		if(event.getAuthor().getId().equals(config.getSelfID()))return false;//avoid responding to self
 		if(event.getAuthor().isBot())return false;//avoid responding to other bots
 		//extract content
-		String content=event.getMessage().getContent();
+		String content=event.getMessage().getContentRaw();
 		//checks for prefix, if found handle command
 		if(content.startsWith(config.getPrefix(event.getGuild()))){
 			CommandParser.CommandContainer cmd=parser.parse(content, event);

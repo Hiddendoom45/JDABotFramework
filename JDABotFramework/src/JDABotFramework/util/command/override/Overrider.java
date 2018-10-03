@@ -29,7 +29,7 @@ public class Overrider {
 	 */
 	public boolean parseOverride(MessageReceivedEvent event){
 		//check if message is one that activates override
-		OverrideKey k = isOverride(event.getMessage().getContent());
+		OverrideKey k = isOverride(event.getMessage().getContentRaw());
 		if(event.getMessage().isMentioned(event.getJDA().getSelfUser())&&!(k==null)){
 			overrides.put(key(event), System.currentTimeMillis());//put it in list
 			keys.remove(k);//remove used key
@@ -39,16 +39,16 @@ public class Overrider {
 		//if message is sent and override is activated
 		else if(overrides.containsKey(key(event))){
 			//checks if override is still active
-			if((overrides.get(key(event)))<System.currentTimeMillis()-300000||event.getMessage().getContent().equals("exit")){
+			if((overrides.get(key(event)))<System.currentTimeMillis()-300000||event.getMessage().getContentRaw().equals("exit")){
 				overrides.remove(key(event));//if not remove key
 				return false;
 			}
 			else{//otherwise return based on if what's entered is an override command
-				return handleOverride(parser.handleArguments(event.getMessage().getContent()),event);
+				return handleOverride(parser.handleArguments(event.getMessage().getContentRaw()),event);
 			}
 		}//if sender is bot owner cancel other commands only if override command
 		else if(event.getAuthor().getId().equals(config.getOwnerID())){
-			return handleOverride(parser.handleArguments(event.getMessage().getContent()),event);
+			return handleOverride(parser.handleArguments(event.getMessage().getContentRaw()),event);
 		}
 		return false;
 	}

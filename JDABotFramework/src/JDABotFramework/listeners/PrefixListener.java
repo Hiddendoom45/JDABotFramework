@@ -13,11 +13,11 @@ public class PrefixListener implements BiPredicate<MessageReceivedEvent,BotGloba
 	public boolean test(MessageReceivedEvent event, BotGlobalConfig u) {
 		if(event.isFromType(ChannelType.TEXT)){
 			if(event.getMessage().isMentioned(event.getJDA().getSelfUser())){
-				if(event.getMessage().getContent().contains("mod prefix")||event.getMessage().getContent().contains("prefix")){
+				if(event.getMessage().getContentRaw().contains("mod prefix")||event.getMessage().getContentRaw().contains("prefix")){
 					JDAMessage.sendMessage(event, "mod prefix for guild is:"+u.getModPrefix(event.getGuild()));
 					return true;
 				}
-				else if(event.getMessage().getContent().contains("prefix")){
+				else if(event.getMessage().getContentRaw().contains("prefix")){
 					JDAMessage.sendMessage(event, "prefix for guild is:"+u.getPrefix(event.getGuild()));
 					return true;
 				}

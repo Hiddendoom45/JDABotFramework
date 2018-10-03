@@ -88,11 +88,11 @@ import net.dv8tion.jda.core.events.self.SelfUpdateEmailEvent;
 import net.dv8tion.jda.core.events.self.SelfUpdateMFAEvent;
 import net.dv8tion.jda.core.events.self.SelfUpdateNameEvent;
 import net.dv8tion.jda.core.events.self.SelfUpdateVerifiedEvent;
-import net.dv8tion.jda.core.events.user.UserAvatarUpdateEvent;
-import net.dv8tion.jda.core.events.user.UserGameUpdateEvent;
-import net.dv8tion.jda.core.events.user.UserNameUpdateEvent;
-import net.dv8tion.jda.core.events.user.UserOnlineStatusUpdateEvent;
 import net.dv8tion.jda.core.events.user.UserTypingEvent;
+import net.dv8tion.jda.core.events.user.update.UserUpdateAvatarEvent;
+import net.dv8tion.jda.core.events.user.update.UserUpdateGameEvent;
+import net.dv8tion.jda.core.events.user.update.UserUpdateNameEvent;
+import net.dv8tion.jda.core.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
@@ -120,10 +120,10 @@ public class MainBotListener extends ListenerAdapter {
 		chains.put(ExceptionEvent.class, new EventListenerChain<ExceptionEvent>(ExceptionEvent.class));
 		
 		//User events
-		chains.put(UserNameUpdateEvent.class, new EventListenerChain<UserNameUpdateEvent>(UserNameUpdateEvent.class));
-		chains.put(UserAvatarUpdateEvent.class, new EventListenerChain<UserAvatarUpdateEvent>(UserAvatarUpdateEvent.class));
-		chains.put(UserOnlineStatusUpdateEvent.class, new EventListenerChain<UserOnlineStatusUpdateEvent>(UserOnlineStatusUpdateEvent.class));
-		chains.put(UserGameUpdateEvent.class, new EventListenerChain<UserGameUpdateEvent>(UserGameUpdateEvent.class));
+		chains.put(UserUpdateNameEvent.class, new EventListenerChain<UserUpdateNameEvent>(UserUpdateNameEvent.class));
+		chains.put(UserUpdateAvatarEvent.class, new EventListenerChain<UserUpdateAvatarEvent>(UserUpdateAvatarEvent.class));
+		chains.put(UserUpdateOnlineStatusEvent.class, new EventListenerChain<UserUpdateOnlineStatusEvent>(UserUpdateOnlineStatusEvent.class));
+		chains.put(UserUpdateGameEvent.class, new EventListenerChain<UserUpdateGameEvent>(UserUpdateGameEvent.class));
 		chains.put(UserTypingEvent.class, new EventListenerChain<UserTypingEvent>(UserTypingEvent.class));
 		
 		//self events

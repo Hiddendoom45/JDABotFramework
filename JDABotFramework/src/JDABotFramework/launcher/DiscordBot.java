@@ -14,6 +14,7 @@ import JDABotFramework.util.command.CmdControl;
 import JDABotFramework.util.counter.CounterPool;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
@@ -135,7 +136,7 @@ public abstract class DiscordBot implements HelpInterface{
 	public void setGame(String name){
 		shutdownCheck();
 		instances.forEach((i,inst)->{
-			inst.jdaInstance.getPresence().setGame(Game.of(name));
+			inst.jdaInstance.getPresence().setGame(Game.of(GameType.DEFAULT, name));
 		});
 	}
 	/**

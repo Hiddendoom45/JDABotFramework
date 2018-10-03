@@ -107,10 +107,12 @@ public class BotBuilder {
 			j.useSharding(Shardnum, shards);
 		}
 		if(async){
-			return j.buildAsync();
+			return j.build();
 		}
 		else{
-			return j.buildBlocking();
+			JDA jda = j.build();
+			jda.awaitReady();
+			return jda;
 		}
 	}
 }
