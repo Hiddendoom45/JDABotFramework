@@ -3,6 +3,8 @@ package JDABotFramework.global.config.guild;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import JDABotFramework.global.GlobalBot;
+
 /**
  * Special configuration stuffs for a guild.
  * @author Allen
@@ -21,12 +23,18 @@ public class GuildConfig {
 	public GuildConfig(String id){
 		this.id=id;
 	}
-	public String getSetting(String setting){
-		return config.get(setting);
+	public String getSetting(String key){
+		return config.get(key);
+	}
+	public <T> T getSetting(String key, Class<T> itemClass){
+		return GlobalBot.gson.fromJson(getSetting(key), itemClass);
 	}
 	public void setSetting(String setting,String value){
 		config.put(setting, value);
 		update.run();
+	}
+	public void setSetting(String key,Object item){
+		setSetting(key, GlobalBot.gson.toJson(item));
 	}
 	public ArrayList<String> getModded(){
 		return modded;

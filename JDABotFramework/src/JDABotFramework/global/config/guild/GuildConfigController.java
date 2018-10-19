@@ -117,7 +117,7 @@ public class GuildConfigController {
 	/**
 	 * Gets a specific guild
 	 * @param id
-	 * @return
+	 * @return the guild config for the guild, automatically creates a new guildConfig if it is not found
 	 */
 	public GuildConfig getGuild(String id){
 		if(guilds.containsKey("G:"+id)){
