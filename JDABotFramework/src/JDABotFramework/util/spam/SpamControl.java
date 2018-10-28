@@ -17,7 +17,7 @@ public class SpamControl {
 	private static HashMap<MessageReceivedEvent, Long> spamData=new HashMap<MessageReceivedEvent,Long>();//times and when spam messages have been sent
 	private static final int spamPersistance=20;
 	public static boolean isSpam(MessageReceivedEvent event,String type){
-		String key=getTypeData(type)[0]==0?key1(event):key2(event);//determine if it's global or channel locked spam controlling
+		String key=getTypeData(type)[0]==0?loclKey(event):globalKey(event);//determine if it's global or channel locked spam controlling
 		int defaultSize=getTypeData(type)[1];//size of max entries before trigger
 		int timeout=getTypeData(type)[2];//timeout for each entry to exit controller
 		if(spammers.containsKey(key)){//if tracked in the current instance
@@ -37,6 +37,11 @@ public class SpamControl {
 			return spam.isSpam;
 		}
 	}
+
+	public static boolean isSpam(MessageReceivedEvent event,SpamGroup group){
+		typeData.put(group.getName(), group.getValues());
+		return isSpam(event,group.getName());
+	}
 	/**
 	 * Adds group to spamcontroller
 	 * @param group groupName for {@link #isSpam(MessageReceivedEvent, String)} calls
@@ -44,8 +49,11 @@ public class SpamControl {
 	 * @param limit number of times the group must be triggered within timelimit before it is blocked
 	 * @param timelimit in miliseconds, the amount of time that must pass before user can send limit amount of messages
 	 */
-	public void addSpam(String group,boolean local,int limit,int timelimit){
+	public void addGroup(String group,boolean local,int limit,int timelimit){
 		typeData.put(group, new int[]{local?0:1,limit,timelimit});
+	}
+	public static void addGroup(SpamGroup group){
+		typeData.put(group.getName(), group.getValues());
 	}
 	private static void sendSpamMessage(MessageReceivedEvent event,String type,SpamData spam){
 		if(!spamData.containsKey(event)){
@@ -53,10 +61,10 @@ public class SpamControl {
 			JDAMessage.sendTempMessage(event, "**%userName%** too many messages, please wait **"+(spam.tillDone/1000)+"** seconds", spamPersistance);
 		}
 	}
-	private static String key1(MessageReceivedEvent event){
+	private static String loclKey(MessageReceivedEvent event){
 		return event.getAuthor().getId()+event.getChannel().getId();//based off of person and channel, as spam is going to be set in part on an event basis
 	}
-	private static String key2(MessageReceivedEvent event){
+	private static String globalKey(MessageReceivedEvent event){
 		return event.getAuthor().getId();//based off of person a universal spam control, for certain commands(aka summon simulator)
 	}
 	private static int[] getTypeData(String type){
