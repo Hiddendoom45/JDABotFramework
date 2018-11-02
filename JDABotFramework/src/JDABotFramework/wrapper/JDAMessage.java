@@ -186,8 +186,9 @@ public class JDAMessage {
 	}
 	/**
 	 * Adds custom emotes to message <br/>
+	 * %%tag% replaces with the empty string instead of the alterative string
 	 * @param event
-	 * @param msg message to add emotes to 
+	 * @param msg message to add emotes to
 	 * @return
 	 */
 	public static String EmoteMessage(MessageReceivedEvent event, String msg){
@@ -200,6 +201,7 @@ public class JDAMessage {
 		else{
 			for(EmoteData e:emotes){
 				msg = msg.replace(e.tag, e.strValue);
+				msg = msg.replace("%"+e.tag, "");
 			}
 			return msg;
 		}
