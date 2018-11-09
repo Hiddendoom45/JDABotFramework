@@ -41,6 +41,14 @@ public interface KeyStorageInt extends SyncStorageInt{
 	 */
 	public void unsetKey(String key);
 	/**
+	 * If the keystorage already contains the key or not
+	 * @param key
+	 * @return
+	 */
+	default boolean containsKey(String key){
+		return getString(key)==null;
+	}
+	/**
 	 * Push / export to any external cloud saves if any exists
 	 */
 	public boolean push();
