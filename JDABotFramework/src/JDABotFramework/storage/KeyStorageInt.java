@@ -8,7 +8,7 @@ import java.util.Optional;
  * @author Allen
  *
  */
-public interface KeyStorageInt {
+public interface KeyStorageInt extends SyncStorageInt{
 	
 	/**
 	 * Gets a string value from the storage source
@@ -43,10 +43,10 @@ public interface KeyStorageInt {
 	/**
 	 * Push / export to any external cloud saves if any exists
 	 */
-	public void push();
+	public boolean push();
 	/**
 	 * Update / pull from any external cloud saves if any exists
 	 */
-	public void pull();
+	public boolean pull();
 
 }

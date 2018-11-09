@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
 
 /**
@@ -20,8 +21,8 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 	private final PreparedStatement get;
 	private final PreparedStatement set;
 	private final PreparedStatement del;
-	private Runnable push = () -> {};
-	private Runnable pull = () -> {};
+	private BooleanSupplier push = () -> {return false;};
+	private BooleanSupplier pull = () -> {return false;};
 	
 	/**
 	 * Creates a KeyStorageInt backed by a database
@@ -59,10 +60,10 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 	public DBBackedKeyStorage(DBStorageInt db, String tableName){
 		this(db.getConnection(),tableName);
 		push = () ->{
-			db.push();
+			return db.push();
 		};
 		pull = () ->{
-			db.pull();
+			return db.pull();
 		};
 	}
 	private boolean validateTableName(String name){
@@ -130,12 +131,12 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 	}
 
 	@Override
-	public void push() {
-		push.run();
+	public boolean push() {
+		return push.getAsBoolean();
 	}
 
 	@Override
-	public void pull() {
-		pull.run();
+	public boolean pull() {
+		return pull.getAsBoolean();
 	}
 }
