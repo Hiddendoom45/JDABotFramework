@@ -17,6 +17,7 @@ import JDABotFramework.storage.KeyStorageInt;
 public class GuildConfigController {
 	private HashMap<String,GuildConfig> guilds = new HashMap<String,GuildConfig>();//holds all the guilds key=G:<guildID>
 	private KeyStorageInt store;//place to save things to
+	private transient final Gson gson = new Gson();
 	BotGlobalConfig gConfig;
 	public GuildConfigController(BotGlobalConfig gConfig){
 		this.gConfig=gConfig;
@@ -51,9 +52,9 @@ public class GuildConfigController {
 	public void load(KeyStorageInt store){
 		//index containing keys for all the different guilds, stored in this way so that updating is faster
 		store.pull();
-		String[] index = new Gson().fromJson(store.getString("guildIndex"), String[].class);
+		String[] index = gson.fromJson(store.getString("guildIndex"), String[].class);
 		for(String g:index){
-			GuildConfig gc = new Gson().fromJson(store.getString(g), GuildConfig.class);
+			GuildConfig gc = gson.fromJson(store.getString(g), GuildConfig.class);
 			//hook to push update to source once anything there gets updated
 			if(this.store==null){
 				gc.setUpdateHook(()->{
@@ -87,7 +88,7 @@ public class GuildConfigController {
 	 * @param store place to save it
 	 */
 	public void update(String id,KeyStorageInt store){
-		store.setString("G:"+id, new Gson().toJson(guilds.get("G:"+id)));
+		store.setString("G:"+id, gson.toJson(guilds.get("G:"+id)));
 	}
 	/**
 	 * Only update guild index, nothing else
@@ -108,7 +109,7 @@ public class GuildConfigController {
 	 */
 	public void quickSave(KeyStorageInt store){
 		//update index
-		store.setString("guildIndex", new Gson().toJson(guilds.keySet().toArray(new String[]{})));
+		store.setString("guildIndex", gson.toJson(guilds.keySet().toArray(new String[]{})));
 		store.push();
 	}
 	/**
@@ -130,9 +131,9 @@ public class GuildConfigController {
 	 */
 	public void save(KeyStorageInt store){
 		//update index
-		store.setString("guildIndex", new Gson().toJson(guilds.keySet().toArray(new String[]{})));
+		store.setString("guildIndex", gson.toJson(guilds.keySet().toArray(new String[]{})));
 		for(String s:guilds.keySet()){
-			store.setString(s, new Gson().toJson(guilds.get(s)));
+			store.setString(s, gson.toJson(guilds.get(s)));
 		}
 		store.push();
 	}
