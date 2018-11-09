@@ -6,6 +6,7 @@ import JDABotFramework.global.config.guild.GuildConfig;
 import JDABotFramework.global.config.guild.GuildConfigController;
 import JDABotFramework.global.config.user.UserConfig;
 import JDABotFramework.global.config.user.UserConfigController;
+import JDABotFramework.storage.KeyStorageInt;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 
@@ -131,5 +132,16 @@ public class BotGlobalConfig {
 	}
 	public UserConfig getUser(long id){
 		return users.getUser(""+id);
+	}
+	public void setSaveLocation(KeyStorageInt store){
+		guilds.setStorageSource(store);
+		users.setStorageSource(store);
+	}
+	public void pull(){
+		guilds.load();
+	}
+	public void push(){
+		guilds.save();
+		users.save();
 	}
 }
