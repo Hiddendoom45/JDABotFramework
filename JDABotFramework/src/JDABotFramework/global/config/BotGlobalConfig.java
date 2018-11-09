@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import JDABotFramework.global.config.guild.GuildConfig;
 import JDABotFramework.global.config.guild.GuildConfigController;
+import JDABotFramework.global.config.user.UserConfig;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 
@@ -15,6 +16,7 @@ import net.dv8tion.jda.core.entities.Guild;
 public class BotGlobalConfig {
 	//container for local configs, reinitialized each time
 	private HashMap<Integer,BotLocalConfig> locals = new HashMap<Integer,BotLocalConfig>();
+	private HashMap<Long,UserConfig> users = new HashMap<Long,UserConfig>();
 	private final String defaultPrefix;//default prefix set by BotConfigStatics
 	private final String defaultModPrefix;//default modprefix set by BotConfigStatics
 	private final String ownerID;//Owner ID
@@ -122,5 +124,11 @@ public class BotGlobalConfig {
 	 */
 	public GuildConfig getGuildConfig(Guild g){
 		return getGuildConfig(g.getId());
+	}
+	public UserConfig getUser(String id){
+		return getUser(Long.parseLong(id));
+	}
+	public UserConfig getUser(long id){
+		return users.get(id);
 	}
 }
