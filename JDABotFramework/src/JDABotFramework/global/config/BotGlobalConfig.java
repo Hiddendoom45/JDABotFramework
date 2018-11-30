@@ -137,6 +137,10 @@ public class BotGlobalConfig {
 		guilds.setStorageSource(store);
 		users.setStorageSource(store);
 	}
+	public void setStorageSource(KeyStorageInt store){
+		guilds.setStorageSource(store);
+		users.setStorageSource(store);
+	}
 	public void pull(){
 		guilds.load();
 	}
