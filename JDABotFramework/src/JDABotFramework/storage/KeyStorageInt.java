@@ -1,5 +1,6 @@
 package JDABotFramework.storage;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -9,6 +10,12 @@ import java.util.Optional;
  *
  */
 public interface KeyStorageInt extends SyncStorageInt{
+	
+	/**
+	 * Gets the list of all keys in the storageInt
+	 * @return
+	 */
+	public List<String> getKeySet();
 	
 	/**
 	 * Gets a string value from the storage source

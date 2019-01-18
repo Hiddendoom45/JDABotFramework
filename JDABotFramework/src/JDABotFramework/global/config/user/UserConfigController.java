@@ -39,6 +39,15 @@ public class UserConfigController {
 		}
 		store.push();
 	}
+	/**
+	 * Loads all users from database
+	 */
+	public void load(){
+		for(String s:store.getKeySet()){
+			String u = store.getString(s);
+			users.put(s,gson.fromJson(u, UserConfig.class));
+		}
+	}
 	
 	public UserConfig getUser(String id){
 		if(users.containsKey("U:"+id)){

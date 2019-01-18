@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import JDABotFramework.global.config.BotGlobalConfig;
 import JDABotFramework.storage.KeyStorageInt;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
  * Holds all the separate guild configs (if anything changes) and also 
@@ -91,28 +92,6 @@ public class GuildConfigController {
 		store.setString("G:"+id, gson.toJson(guilds.get("G:"+id)));
 	}
 	/**
-	 * Only update guild index, nothing else
-	 * storage source needs to be set using {@link #setStorageSource(KeyStorageInt)}
-	 * @throws UncheckedIOException if storage source not set using {@link #setStorageSource(KeyStorageInt)}
-	 */
-	public void quickSave(){
-		if(!(store==null)){
-			quickSave(store);
-		}
-		else{
-			throw new UncheckedIOException(new IOException("quicksave:Storage source not set"));
-		}
-	}
-	/**
-	 * Only update guild index, nothing else
-	 * @param store
-	 */
-	public void quickSave(KeyStorageInt store){
-		//update index
-		store.setString("guildIndex", gson.toJson(guilds.keySet().toArray(new String[]{})));
-		store.push();
-	}
-	/**
 	 * Fully update everything pushing to the storage source.
 	 * storage source needs to be set using {@link #setStorageSource(KeyStorageInt)}
 	 * @throws UncheckedIOException if storage source not set using {@link #setStorageSource(KeyStorageInt)} 
@@ -122,7 +101,7 @@ public class GuildConfigController {
 			save(store);
 		}
 		else{
-			throw new UncheckedIOException(new IOException("save:Storgae source not set"));
+			throw new UncheckedIOException(new IOException("save:Storage source not set"));
 		}
 	}
 	/**
@@ -159,5 +138,13 @@ public class GuildConfigController {
 			guilds.put("G:"+id, g);
 			return g;
 		}
+	}
+	/**
+	 * Gets a specic guild
+	 * @param event event to extract the guild from
+	 * @return
+	 */
+	public GuildConfig getGuild(MessageReceivedEvent event){
+		return getGuild(event.getGuild().getId());
 	}
 }

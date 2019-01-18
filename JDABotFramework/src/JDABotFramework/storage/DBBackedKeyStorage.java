@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
@@ -21,6 +23,7 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 	private final PreparedStatement get;
 	private final PreparedStatement set;
 	private final PreparedStatement del;
+	private final PreparedStatement iter;
 	private BooleanSupplier push = () -> {return false;};
 	private BooleanSupplier pull = () -> {return false;};
 	
@@ -40,10 +43,12 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 		PreparedStatement get;
 		PreparedStatement set;
 		PreparedStatement del;
+		PreparedStatement iter;
 		try{
 			get = dbConnection.prepareStatement("SELECT (KEY,VALUE) FROM "+table+" WHERE KEY = ?");
 			set = dbConnection.prepareStatement("MERGE INTO "+table+" (KEY, VALUE) KEY(KEY) VALUES(?,?) ");
 			del = dbConnection.prepareStatement("DELETE FROM "+table+" WHERE KEY = ?");
+			iter = dbConnection.prepareStatement("SELECT KEY FROM "+table);
 			dbConnection.createStatement().execute("CREATE TABLE IF NOT EXISTS "+table+" (KEY VARCHAR PRIMARY KEY, VALUE VARCHAR)");
 		}catch(SQLException e){
 			throw new IllegalArgumentException(e);
@@ -51,6 +56,7 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 		this.get = get;
 		this.set = set;
 		this.del = del;
+		this.iter = iter;
 	}
 	/**
 	 * Creates a KeyStorageInt backed by a database
@@ -69,6 +75,18 @@ public class DBBackedKeyStorage implements KeyStorageInt{
 	private boolean validateTableName(String name){
 		//alphanumeric with dot portion in the case of schema
 		return Pattern.compile("[A-Za-z0-9][A-Za-z0-9_]*($|\\.[A-Za-z0-9][A-Za-z0-9_]*)").matcher(name).matches();
+	}
+	@Override
+	public List<String> getKeySet(){
+		ArrayList<String> keys = new ArrayList<String>();
+		try{
+			ResultSet keySet = iter.executeQuery();
+			while(keySet.next()){
+				keys.add(keySet.getString(1));
+			}
+		}catch(SQLException e){
+		}
+		return keys;
 	}
 	@Override
 	public String getString(String key) {
